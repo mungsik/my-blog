@@ -1,13 +1,13 @@
 import Head from "next/head";
-import metadata from "./../data/metadata";
+import { info } from "../data/information";
 import Header from "./Header";
 
 const Container = (props) => {
   const meta = {
-    title: metadata.title,
-    description: metadata.description,
-    author: metadata.author,
-    main: metadata.main,
+    title: info.title,
+    description: info.description,
+    author: info.author,
+    main: info.main,
     ...props.customMeta,
   };
 

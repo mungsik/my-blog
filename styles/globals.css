@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: "Jalnan";
+  src: url("./font/Jalnan.ttf");
+}
+
+@font-face {
+  font-family: "S-Core_Regular";
+  src: url("./font/S-Core_Dream_OTF/SCDream4.otf");
+}
+
+@font-face {
+  font-family: "S-Core_Medium";
+  src: url("./font/S-Core_Dream_OTF/SCDream5.otf");
+}
+
+@font-face {
+  font-family: "S-Core_Bold";
+  src: url("./font/S-Core_Dream_OTF/SCDream6.otf");
+}
