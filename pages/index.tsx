@@ -1,7 +1,7 @@
 import Container from "./../components/Container";
 import { allPosts } from "contentlayer/generated";
 import { InferGetStaticPropsType } from "next";
-import RecentPosts from "./../components/RecentPosts";
+import RecentPosts from "../components/RecentPosts";
 
 const Home = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (

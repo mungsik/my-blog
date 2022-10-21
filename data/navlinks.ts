@@ -1,8 +1,8 @@
 const navlinks: { title: string; link: string }[] = [
   { title: "Home", link: "/" },
-  { title: "Blog", link: "/blog" },
+  { title: "Note", link: "/note" },
   { title: "About", link: "/about" },
-  { title: "Projects", link: "/projects" },
+  { title: "Resume", link: "/resume" },
 ];
 
 export default navlinks;
