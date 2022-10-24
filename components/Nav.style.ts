@@ -7,6 +7,7 @@ export const NavContainer = styled.div`
   flex-flow: row nowrap;
   align-items: center;
   a {
+    font-family: Jalnan, sans-serif, Arial;
     text-decoration: none;
     color: var(--tx-sub-dark);
     padding: 0 10px;
@@ -16,7 +17,7 @@ export const NavContainer = styled.div`
       display: ["none", "block"],
     })}
     &:hover {
-      color: var(--tx-accent);
+      color: #999da0;
     }
   }
   svg {
@@ -48,12 +49,13 @@ export const DropNavContainer = styled.div`
   flex-flow: column nowrap;
   background: var(--bg-main);
   a {
+    font-family: Jalnan, sans-serif, Arial;
     text-decoration: none;
     color: var(--tx-main);
     padding: 15px 30px;
     transition: 0.3s;
     &:hover {
-      color: var(--tx-accent);
+      color: #999da0;
     }
   }
   ${dynamicVisible}

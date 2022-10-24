@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
 import navlinks from "./../data/navlinks";
 import { useState } from "react";
 import { DropNavContainer, NavContainer } from "./Nav.style";
