@@ -5,7 +5,7 @@ import Title from "components/Title";
 const AboutPage = () => {
   return (
     <Container>
-      <Title />
+      <Title title="About" des="Let me introduce myself." />
       <AboutProfile />
     </Container>
   );

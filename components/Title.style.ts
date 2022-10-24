@@ -20,7 +20,7 @@ export const TitleText = styled.span`
   animation: rainbow 2s ease-in-out infinite;
   transition: color 0.2s ease-in-out;
   -webkit-background-clip: text;
-  color: rgba(0, 0, 0, 0);
+  color: rgba(1, 1, 1, 1);
 `;
 
 export const DesText = styled.span`
