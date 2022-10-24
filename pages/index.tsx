@@ -1,21 +1,22 @@
 import Container from "./../components/Container";
-import { allPosts } from "contentlayer/generated";
+import { allBlogs } from "contentlayer/generated";
 import { InferGetStaticPropsType } from "next";
 import RecentPosts from "../components/RecentPosts";
 
 const Home = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <Container>
-      <div className={`my-5 w-full`}>
-        ...
+      {posts.length >= 5 ? (
+        <RecentPosts posts={posts.slice(0, 5)} />
+      ) : (
         <RecentPosts posts={posts} />
-      </div>
+      )}
     </Container>
   );
 };
 
 export const getStaticProps = async () => {
-  const posts = allPosts.sort(
+  const posts = allBlogs.sort(
     (a, b) => Number(new Date(b.date)) - Number(new Date(a.date))
   );
   return {
