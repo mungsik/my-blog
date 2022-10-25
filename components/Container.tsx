@@ -21,9 +21,9 @@ const Container = (props) => {
           <meta content={meta.description} name="description" />
           <meta property="og:site-name" content={meta.author} />
         </Head>
-        <section className="flex flex-col flex-nowrap pt-24 w-full min-h-screen items-center justify-between ">
+        <section className="flex flex-col flex-nowrap pt-24 w-full min-h-screen items-center justify-between bg-white">
           <Header />
-          <main className="font-SCore_Regular flex flex-col flex-nowrap w-full max-w-screen-md items-center z-10 px-5">
+          <main className="flex flex-col flex-nowrap w-full max-w-screen-md items-center z-10 px-5">
             {props.children}
           </main>
           <Footer />

@@ -12,7 +12,7 @@ const AboutProfile = () => {
         objectFit="cover"
       />
       <div
-        className={`font-SCore_Regular min-w-[100px] max-w-[400px] px-5 break-words leading-6 mt-5 md:mt-0`}
+        className={`min-w-[100px] max-w-[400px] px-5 break-words leading-6 mt-5 md:mt-0`}
       >
         <span>데이터 분석을 희망하는 취업 준비생입니다.</span>
         <br />

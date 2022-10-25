@@ -10,8 +10,7 @@ const NoteAsideItem = ({ item }) => {
       <React.Fragment key={item.title}>
         <Link href={item.urlPath} passHref>
           <NoteAsideText onClick={() => setIsItemsOpen(!isItemsOpen)}>
-            {isItemsOpen ? "👇" : "👉"}
-            {item.title}
+            {isItemsOpen ? "👇" : "👉"} {item.title}
           </NoteAsideText>
         </Link>
         {item.children && item.children.length > 0 && isItemsOpen && (
