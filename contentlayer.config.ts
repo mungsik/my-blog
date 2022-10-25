@@ -1,11 +1,12 @@
 import { defineDocumentType, makeSource } from "contentlayer/source-files";
+import type { DocumentGen } from "contentlayer/core";
 
 import rehypeSlug from "rehype-slug";
 import rehypeCodeTitles from "rehype-code-titles";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrism from "rehype-prism-plus";
-
-import type { DocumentGen } from "contentlayer/core";
+import rehypeKatex from "rehype-katex";
+import remarkMath from "remark-math";
 
 export const urlFromFilePath = (doc: DocumentGen): string => {
   return doc._raw.flattenedPath.replace(/pages\/?/, "");
@@ -70,8 +71,10 @@ export default makeSource({
   contentDirPath: "posts",
   documentTypes: [Blog, Note],
   mdx: {
+    remarkPlugins: [remarkMath],
     rehypePlugins: [
       rehypeSlug,
+      rehypeKatex,
       rehypeCodeTitles,
       rehypePrism,
       [
