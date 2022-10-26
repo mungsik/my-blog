@@ -1,25 +1,25 @@
 import Link from "next/link";
+import {
+  PostCard,
+  PostDescription,
+  PostItlte,
+  RecentPostTitle,
+} from "./RecentPost.style";
 
-const RecentPosts = ({ posts }) => {
+const RecentPost = ({ posts }) => {
   return (
-    <section className={`mt-10`}>
-      <h1 className={`text-3xl font-extrabold`}>최근 게시물</h1>
-      <div className={`flex flex-col`}>
-        {posts.slice(0, 5).map((post) => (
-          <Link
-            key={post._id}
-            href={`/note/${post._raw.flattenedPath}`}
-            passHref
-          >
-            <a className="mt-5">
-              <div className={`font-medium text-xl`}>{post.title}</div>
-              <div className={`font-light`}>{post.description}</div>
-            </a>
-          </Link>
-        ))}
-      </div>
-    </section>
+    <>
+      <RecentPostTitle>Recent Post</RecentPostTitle>
+      {posts.map((post) => (
+        <Link href={`/blog/${post.slug}`} passHref key={post.slug}>
+          <PostCard>
+            <PostItlte>{post.title}</PostItlte>
+            <PostDescription>{post.description}</PostDescription>
+          </PostCard>
+        </Link>
+      ))}
+    </>
   );
 };
 
-export default RecentPosts;
+export default RecentPost;
