@@ -1,0 +1,36 @@
+---
+title: K번째 큰 수
+date: 2022-10-26
+---
+
+## 문제
+
+![](/posts/algorithms/K번째-큰-수.png)
+
+## 풀이
+
+```python
+def ques():
+    num_list = [13, 15, 34, 23, 45, 65, 33, 11, 26, 42]
+    # set() 중복 제거
+    res = set()
+    for i in range(num_list):
+        for j in range(i + 1, num_list):
+            for m in range(j + 1, num_list):
+                res.add(num_list[i] + num_list[j] + num_list[m])
+    res = list(res)
+    res.sort(reverse=True)
+
+
+print(ques())
+```
+
+## 짚고 넘어갈 것
+
+#### 1. 집합(set)
+
+- 특징
+
+  1. 중복을 허용하지 않는다.
+  2. 순서가 없다(Unordered). 따라서 set 자료형에 저장된 값을 인덱싱으로 접근하려면 리스트나 튜플로 변환한 후 해야 한다.
+  3. 값을 추가할 때 append가 아닌 add 를 사용한다.
