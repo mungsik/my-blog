@@ -1264,7 +1264,7 @@ concat-map@0.0.1:
 
 contentlayer@^0.2.8:
   version "0.2.8"
-  resolved "https://registry.npmjs.org/contentlayer/-/contentlayer-0.2.8.tgz"
+  resolved "https://registry.yarnpkg.com/contentlayer/-/contentlayer-0.2.8.tgz#878adf9041e7eda874101e11c205f068e05c1db8"
   integrity sha512-y+GBBHp59z3rbq9d7tFy0Byopby50Mxcfkbpdt34gYuB3JNaaAmLc+neviSXz7wZ8zsBKsRPAOkuDNio+uYapA==
   dependencies:
     "@contentlayer/cli" "0.2.8"
@@ -3228,7 +3228,7 @@ natural-compare@^1.4.0:
 
 next-contentlayer@^0.2.8:
   version "0.2.8"
-  resolved "https://registry.npmjs.org/next-contentlayer/-/next-contentlayer-0.2.8.tgz"
+  resolved "https://registry.yarnpkg.com/next-contentlayer/-/next-contentlayer-0.2.8.tgz#59c4a01191d7e1f06d9fcca785377aa45d525f94"
   integrity sha512-7oRN/CVmiQ+80++c6BoMytyvKz0U2BDGBJpVlYSf3AitmZltMMMzjiBsFC9YAhDDfiqZshT39dKkW6Sn+pFyGA==
   dependencies:
     "@contentlayer/core" "0.2.8"

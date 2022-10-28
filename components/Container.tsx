@@ -2,7 +2,6 @@ import Head from "next/head";
 import { info } from "../data/information";
 import Footer from "./Footer";
 import Header from "./Header";
-import Link from "next/link";
 
 const Container = (props) => {
   const meta = {

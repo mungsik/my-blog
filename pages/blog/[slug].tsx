@@ -16,7 +16,6 @@ export const getStaticProps = async ({ params }) => {
   // console.log(params);
   // console.log(allBlogs);
   const post = allBlogs.find((p) => p.slug === params?.slug);
-  console.log("post: ", post);
 
   return {
     props: {

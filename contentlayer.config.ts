@@ -67,9 +67,35 @@ export const Blog = defineDocumentType(() => ({
   },
 }));
 
+export const Book = defineDocumentType(() => ({
+  name: "Book",
+  filePathPattern: `book/*.mdx`,
+  contentType: "mdx",
+  fields: {
+    title: { type: "string", required: true },
+    date: { type: "string", required: true },
+    description: { type: "string", required: true },
+    thumbnailUrl: { type: "string", required: true },
+    tags: {
+      type: "list",
+      required: true,
+      of: {
+        type: "string",
+      },
+      default: [],
+    },
+  },
+  computedFields: {
+    slug: {
+      type: "string",
+      resolve: (doc) => doc._raw.sourceFileName.replace(/\.mdx$/, ""),
+    },
+  },
+}));
+
 export default makeSource({
   contentDirPath: "posts",
-  documentTypes: [Blog, Note],
+  documentTypes: [Blog, Note, Book],
   mdx: {
     remarkPlugins: [remarkMath],
     rehypePlugins: [
