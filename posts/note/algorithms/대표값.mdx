@@ -1,0 +1,84 @@
+---
+title: 대표값
+date: 2022-10-28
+---
+
+## 1. 문제
+
+![](/posts/algorithms/대표값.png)
+
+## 2. 풀이
+
+```python
+def qus():
+    a = [45, 73, 66, 87, 92, 67, 75, 79, 75, 80]
+    sum_score = sum(a)
+    mean = round(sum_score / len(a))
+    # 정수형 크기에서 가장 큰 수
+    min = float("inf")
+    for idx, x in enumerate(a):
+        # 평균 점수와 학생 점수간의 **거리**를 구한다는 느낌으로 접근
+        # 즉, tmp 값이 가장 적은 학생이 정답.
+        tmp = abs(x - mean)
+        print(tmp)
+        if tmp < min:
+            min = tmp
+            score = x
+            res = idx + 1
+
+        # 만약에 거리가 같을 땐 점수가 큰 사람이 정답.
+        # 또한 학생 번호가 작은 사람이 정답.
+        elif tmp == min:
+            if x > score:
+                score = x
+                res = idx + 1
+    print(mean, res)
+
+
+qus()
+```
+
+### 3. 짚고 넘어갈 것
+
+    #### 1. float('inf')
+        - 알고리즘 문제 풀이 시 최소값, 최대값을 구할 때 자주 사용하는 무한대이다.
+        - for 문을 돌 때 첫번 째에서 무조건 참이 되게 하기 위해 무한대를 넣어주는 것.
+
+    #### 2. 최솟값 구해지는 과정
+
+    ```python
+    arr = [5,3,7,9,2,5,2,6]
+    arrMin = float('inf')
+    for i in range(len(arr)):
+    if arr[i] < arrMin:
+        arrMin = arr[i]
+    ```
+
+    ![](/posts/algorithms/대표값-1.png)
+
+    무한대값을 기준값으로 둬서 if문이 무조건 참이 된다.
+
+    ![](/posts/algorithms/대표값-2.png)
+
+    #### 3. round 함수
+
+    파이썬의 반올림은 반올림 하려는 수가 올림, 내림 했을 때 **동일하게 차이가 나는 경우**에는 **짝수** 값으로 반올림한다.
+    이를 **오사오입 원칙** 이라고 한다.
+
+    ex) round(4.5) # 4
+
+    우리가 자주 사용하는 반올림은 4 이하의 숫자는 내림, 5 이상의 숫자는 올림을 하는 **사사오입 원칙**이다.
+
+    즉, 위의 풀이에서 반올림을 할 때 round가 아니라 다른 방식을 써야한다!
+
+    #### 4. 파이썬으로 사사오입 반올림 구현하기
+
+    ```python
+    a = 0.5
+    if a >= 0:
+        print(int(sum(nums) / n + 0.5))
+    elif a < 0:
+        print(int(sum(nums) / n - 0.5))
+
+    ## 1
+    ```
