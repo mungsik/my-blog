@@ -1,3 +1,5 @@
+//! 안쓰는 파일
+
 import Link from "next/link";
 import {
   PostCard,

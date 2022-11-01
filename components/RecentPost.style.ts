@@ -1,3 +1,5 @@
+//! 안쓰는 파일
+
 import styled from "@emotion/styled";
 
 export const RecentPostTitle = styled.div`
