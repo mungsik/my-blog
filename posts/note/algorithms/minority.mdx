@@ -1,0 +1,67 @@
+---
+title: 소수(에라토스테네스의 체)
+date: 2022-11-01
+---
+
+## 1. 문제
+
+![](/note/algorithms/소수-1.PNG)
+
+## 2. 풀이
+
+```python
+def minor(n):
+    ch = [0] * (n + 1)
+    cnt = 0
+    for i in range(2, n + 1):
+        if ch[i] == 0:
+            cnt += 1
+            for j in range(i, n + 1, i):  # i의 배수로 증가
+                ch[j] = 1
+    print(cnt)
+
+
+minor(20)
+```
+
+![](/note/algorithms/소수-2.PNG)
+
+## 3. 짚고 넘어갈 것
+
+앞서 포스팅한 소수를 구하는 법은 다음과 같다.
+
+```python
+def is_prime_num(n):
+    for i in range(2, n):
+        if n % i == 0:
+            return False # i로 나누어 떨어지면 소수가 아니므로 False 리턴
+
+    return True # False가 리턴되지 않고 for문을 빠져나왔다면 소수이므로 True 리턴
+```
+
+그런데 약수의 특성을 활용해서 위의 연산 횟수를 반으로 줄일 수 있는 방법이 있다.
+약수의 특성이란, **특정 수 N의 약수들을 일렬로 나열했을 때 그 중 가운데의 수를 중심으로 약수가 대칭된다는 것**이다.
+
+16을 예로들면, 16의 약수들은 1,2,4,8,16 이다.
+위 약수들은 중간값 4를 기준으로 양 옆의 수들이 서로 대칭이 되고 있음이 보인다.
+
+즉, 16의 약수를 찾고 싶다면 16의 약수의 중간값을 기준으로 한 쪽만 검사를 해도 된다는 것이다.
+여기서 중간값은 찾고자하는 수의 제곱근 값으로 가정해 처리할 수 있고, 이 제곱근 값을 기준으로 왼쪽에 약수가 하나도 존재하지 않는다면 제곱근 값 기준으로 오른쪽에도 약수가 존재하지 않는다고 볼 수 있다.
+
+코드는 다음과 같다.
+
+```python
+
+import math
+
+def is_prime_num(n):
+    for i in range(2, int(math.sqrt(n))+1): # n의 제곱근을 정수화 시켜준 후 + 1
+        if n % i == 0:
+            return False
+
+    return True
+```
+
+### Reference
+
+[Reference](https://seongonion.tistory.com/43)
