@@ -8,6 +8,7 @@ const MDXPost = ({ title, date, children }) => {
         <span className="text-sm font-light mb-5">{usDateString(date)}</span>
       )}
       {children}
+      {children.title}
     </div>
   );
 };

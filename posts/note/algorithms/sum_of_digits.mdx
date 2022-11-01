@@ -1,0 +1,28 @@
+---
+title: 자릿수의 합
+date: 2022-10-29
+---
+
+## 문제
+
+![](/note/algorithms/자릿수합-1.PNG)
+
+## 풀이
+
+```python
+a = list(map(int, input().split()))
+def digit_sum(x):
+    sum = 0
+    for i in str(x):
+        sum += int(i)
+    return sum
+
+
+max = float("-inf")
+for x in a:
+    tot = digit_sum(x)
+    if tot > max:
+        max = tot
+        res = x
+        print(res)
+```

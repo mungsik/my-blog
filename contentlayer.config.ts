@@ -14,7 +14,7 @@ export const urlFromFilePath = (doc: DocumentGen): string => {
 
 export const Note = defineDocumentType(() => ({
   name: "Note",
-  filePathPattern: `note/**/*.mdx`,
+  filePathPattern: `note/**/*.mdx` || `note/***/**/*.mdx`,
   contentType: "mdx",
   fields: {
     title: { type: "string", required: true },
