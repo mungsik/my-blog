@@ -1,0 +1,69 @@
+---
+title: 연속형 확률 분포
+date: 2022-11-02
+---
+
+## 연속형 확률 분포
+
+1. **확률밀도함수**(probability density funcion, pdf) : 연속형 확률 변수 X에 대해서 $f(x)$가 아래의 조건을 만족하면 확률밀도함수라고 함.
+
+   ![](/note/statistics/pd-3.PNG)
+
+2. **누적분포함수**(cumulative density function, cdf) : 확률밀도함수를 적분하면 누적분포함수가 됨
+
+   ![](/note/statistics/pd-4.PNG)
+
+3. **균일분포**(uniform distribution) : 확률 변수 X가 a, b 사이에서 아래와 같은 확률 밀도 함수를 가짐
+
+   ![](/note/statistics/pd-5.PNG)
+
+4. **정규분포**(normal distribution)
+
+   - 정규 분포는 19세기 최고 수학자라고 불리는 독일의 가우스에 의해 제시된 것으로 가우스 분포라고도 함.
+   - 확률 밀도 함수는 확률 변수 X가 평균이 μ 이고, 분산이 $\sigma^2$인 정규분포를 따를 때 아래와 같음.
+
+   ![](/note/statistics/pd-6.PNG)
+
+   - 정규 분포의 성질
+
+   ![](/note/statistics/pd-7.PNG)
+
+5. **표준 정규 분포**(strandard normal distribution)
+
+   ![](/note/statistics/pd-8.PNG)
+
+6. **정규 분포**
+
+   ![](/note/statistics/pd-9.PNG)
+
+7. **이항 분포의 정규 근사**
+
+   ![](/note/statistics/pd-10.PNG)
+
+8. **지수 분포**(exponential distribution) : 단위 시간당 발생할 확률 $\lambda$인 어떤 사건의 횟수가 포아송 분포를 따른다면, 어떤 사건이 처음 발생할 때까지 걸린 시간 확률 변수 x는 지수 분포임
+
+   - 예시) 버스 정류장에서 100번 버스가 도착하는 횟수가 포아송 분포를 따른다면, 첫 번째 버스가 도착할 때까지 대기 시간의 분포가 지수 분포임.
+
+   - **지수 분포의 pdf** $f(x) = \lambda e^{-\lambda x}, x \geq 0$
+
+   $X ~ Exp(\lambda)$
+
+   - **지수 분포의 cdf** $f(x) = 1 - e^{-\lambda x}, x \geq 0$
+
+   - 지수 분포는 연속되는 사건의 사이의 대기 시간도 지수 분포임. 즉, 앞의 예시에서 두 번째 버스가 도착하고 세 번째 버스가 도착 할 때까지 대기 시간의 분포도 지수 분포임.
+
+   - **지수 분포의 평균과 분산**
+
+     1. 평균 : $E[X] = \frac{1}{\lambda}$
+     1. 분산 : $Var[X] = \frac{1}{\lambda^2}$
+
+9. **지수 분포의 무기억성(Memoryless Property)**
+
+   - 어떤 시점부터 소요되는 시간은 과거 시간에 영향을 받지 않음.
+
+   - 예시) 버스를 기다리는 대기 시간은 먼저 기다린 사람과 확률이 같음.
+   - 전구를 한달동안 사용했을 때 남은 수명은 한달 간 사용했던 영향을 받지 않음. 즉, 새 전구와 한달 간 사용한 전구의 남은 수명은 같다고 생각함.
+
+10. 확률 분포의 관계도
+
+![](/note/statistics/pd-11.PNG)

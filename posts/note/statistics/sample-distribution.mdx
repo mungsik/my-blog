@@ -1,0 +1,53 @@
+---
+title: 모집단과 표본
+date: 2022-11-02
+---
+
+![](/note/statistics/sample-1.PNG)
+
+### 모집단에서 표본을 추출하는 방법에는 여러가지가 있음
+
+- **표본추출**(Sampling) : 모집단으로부터 표본을 추출하는 것을 Sampling이라고 하며, 표본으로부터 그 특성을 찾아내고 모집단의 특성을 추론하고자함.
+- **복원추출**(Sampling with replacement) : 모집단에서 데이터를 추출 할 때 하나를 추출하고 다시 넣고 추출하는 방법으로 동일한 표본이 추출 될 수 있음
+- **비복원추출**(Sampling without replacement) : 모집단에서 데이터를 추출 할 때 하나를 추출하고 다시 넣지 않고 추출하는 방법
+- **Random Sampling** : 모집단에서 데이터를 추출할 때 주의할 점은 편향되지 않아야함. 각 객체가 동일한 확률로 추출되는 방법.
+
+### 불균형 데이터(Imbalanced Data)의 문제
+
+- 데이터가 불균형 데이터일 경우 문제 발생
+  1. Sampling 기법을 통하여 해결
+  2. 모델을 통한 성능 개선(ex: Cost-sensitive learning)
+
+### Sampling 기법
+
+    1. **Over Sampling**:
+        - 타겟 데이터의 적은 class의 수를 많은 class의 비율만큼 증가시킴(일정 비율로 복원추출 하는 개념)
+        - 과도적합의 문제가 발생할 수 있음
+    2. **Under Sampling**:
+        - 타겟 데이터의 많은 class의 수를 적은 class의 비율만큼 감소시킴.
+        - 임의로 뽑은 데이터가 biased(편향)될 수 있고, 모형의 성능이 떨어질 수 있음.
+
+### 표본 분포
+
+- **통계량**(Statistic) : 표본에 기초하여 계산되는 수치 함수를 통계량이라고 함.
+
+  $\overline{X} = \frac{x_1+x_2+...+x_n}{n}, S^2 = \frac{1}{n-1} \sum_{i=1}^{n}(x_i - \overline{x})^2$
+
+- **표본분포**(Sampling distribution) : 통계량들이 이루는 분포를 표본 분포라고 함
+- 표본 평균(Sample mean)
+
+  $\overline{X} = \frac{1}{n} \sum_{i=1}^{n} X_i = \frac{1}{n}(x_1 + x_2 + ... +x_n)$
+
+- 표본 평균 $\overline{X}$의 기대값과 분산
+
+  기대값 $E[\overline{X}] = μ$
+
+  분산 $Var[\overline{X}] = \frac{\sigma^2}{n}$
+
+- ![](/note/statistics/sample-2.PNG)
+
+- **중심극한정리**(central limit theorem)
+
+  - 평균이 μ이고 $\sigma^2$ 인 임의의 모집단에서 랜덤 표본 $X_1, X_2, ..., X_n$ 을 추출할 때 표본의 크기 n이 충분히 $(n \geq 30)$ 크면,표본 평균 $\overline{X}$ 는 근사적으로 정규분포 $n(μ, \frac{\sigma^2}{n})$ 을 따른다.
+
+  ![](/note/statistics/sample-3.PNG)
