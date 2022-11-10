@@ -1,0 +1,42 @@
+---
+title: 주사위 게임
+date: 2022-11-10
+---
+
+## 문제
+
+![](/note/algorithms/dice-game.PNG)
+
+## 풀이
+
+```python
+import sys
+sys.stdin = open("input.txt", "rt")
+n = int(input())
+
+res = 0
+for i in range(n):
+    tmp = input().split()
+    tmp.sort()
+    print(tmp)
+    a, b, c = map(int, tmp)
+    if a ==b and b == c:
+        money = 10000 + a*1000
+    elif a==b or a==c:
+        money = 1000+(a*100)
+    elif b == c:
+        money = 1000+(b*100)
+    else:
+        money = c*100
+    if money > res:
+        res = money
+print(res)
+
+```
+
+## 짚고 넘어갈 것
+
+#### 1. map
+
+    - 리스트의 요소를 지정된 함수로 처리해주는 함수.
+    - input().split() 으로 값을 여러 개 입력받고 정수, 실수로 변환할 때 자주 사용.
