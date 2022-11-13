@@ -17,7 +17,7 @@ export const ProjectCard = styled.div`
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   &:hover div {
-    opacity: 0.9;
+    opacity: 1;
   }
   .round-image {
     border-radius: 5px;
@@ -41,7 +41,7 @@ export const ProjectCardTitle = styled.span`
   font-weight: 500;
   font-size: 24px;
   word-break: keep-all;
-  color: white;
+  color: black;
 `;
 
 export const ProjectCardDes = styled.span`
@@ -49,5 +49,5 @@ export const ProjectCardDes = styled.span`
   font-size: 16px;
   word-break: keep-all;
   margin-top: 20px;
-  color: white;
+  color: black;
 `;
