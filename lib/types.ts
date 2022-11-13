@@ -1,3 +1,10 @@
+export type Project = {
+  title: string;
+  description: string;
+  url: string;
+  image: string;
+};
+
 export type TreeNode = {
   title: string;
   date: string;
