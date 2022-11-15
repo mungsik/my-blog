@@ -1,0 +1,38 @@
+---
+title: 외워야할 팁들
+date: 2022-11-15
+---
+
+- **앞에 자리에 0을 제외하고 숫자 출력하기**
+
+ex) 032 인 경우 32로 출력
+
+```python
+
+n=[3,2]
+res = 0
+for x in n:
+    if x.isdecimal():
+        res = res * 10 + int(x)
+
+print(res)
+```
+
+- **숫자 앞뒤 바꾸기**
+
+ex) 32 -> 23
+
+```python
+
+[::-1]
+```
+
+- **배열 초기화**
+
+### list(range(x))
+
+ex) 1~20까지로 초기화해야하는 경우,
+
+```python
+a = list(range(21))
+```
