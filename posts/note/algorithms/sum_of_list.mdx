@@ -1,0 +1,50 @@
+---
+title: 두 리스트 합
+date: 2022-11-16
+---
+
+## 문제
+
+![](/note/algorithms/리스트합치기-1.PNG)
+
+## 풀이
+
+```python
+import sys
+
+sys.stdin = open("input.txt", "r")
+n = int(sys.stdin.readline())
+a = list(map(int, sys.stdin.readline().split()))
+m = int(sys.stdin.readline())
+b = list(map(int, sys.stdin.readline().split()))
+print("n", n)
+print("m", m)
+
+p1 = p2 = 0  # 포인터 초기화
+c = []
+while p1 < n and p2 < m:  # 두 리스트 중 아무거나 반복문을 다 돌면 while문 종료
+    if a[p1] <= b[p2]:
+        c.append(a[p1])
+        p1 += 1  # 포인터 증가
+    else:
+        c.append(b[p2])
+        p2 += 1
+if p1 < n:
+    c = c + a[p1:]
+if p2 < m:
+    c = c + b[p2:]
+print("p1", p1)
+print("p2", p2)
+print(c)
+
+
+```
+
+## 짚고 넘어갈 것
+
+#### 1. 출제 의도
+
+    sort() 내장 함수를 써서 푸는 문제가 아니다. sort() 함수는 시간복잡도가 nlong(n)인데, 이 문제의 경우 입력값을 예로들면, 데이터가 합쳐서 3 + 5 = 8 이므로 `8lon(8)`의 복잡도가 나타난다.
+    그러나 이미 문제에서 오름차순으로 정렬이 되어있으므로 n번의 반복, 여기선 8번, 만 하면된다. 즉, 시간복잡도 n이 나오는 것이다.
+
+    ![](/note/algorithms/리스트합치기-2.PNG)
