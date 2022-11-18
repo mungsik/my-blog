@@ -29,10 +29,27 @@ ex) 32 -> 23
 
 - **배열 초기화**
 
-### list(range(x))
+  #### list(range(x))
 
-ex) 1~20까지로 초기화해야하는 경우,
+  ex) 1~20까지로 초기화해야하는 경우,
 
 ```python
 a = list(range(21))
+```
+
+- **격자판 x열, y열**
+
+```python
+
+n = int(sys.stdin.readline())
+a = [list(map(int, sys.stdin.readline().split())) for i in range(n)]
+
+for i in range(n):
+    for j in range(n):
+        raw += a[i][j]
+        column += a[j][i]
+
+## 대각선
+        sum1+=a[i][i] #왼쪽에서 시작하는 대각선
+        sum2+=a[i][n-i-1] #오른쪽에서 시작하는 대각선
 ```
