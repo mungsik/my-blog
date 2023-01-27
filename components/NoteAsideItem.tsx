@@ -5,6 +5,7 @@ import { NoteAsideChildText, NoteAsideText } from "./NoteAside.style";
 const NoteAsideItem = ({ item }) => {
   const [isItemsOpen, setIsItemsOpen] = useState(false);
   const [isSubItemsOpen, setIsSubItemsOpen] = useState(false);
+
   return (
     <>
       <React.Fragment key={item.title}>

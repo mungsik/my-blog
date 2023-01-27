@@ -12,6 +12,7 @@ const NoteAside = ({ tree }: { tree: TreeRoot }) => {
     });
     setIsMenuOpen(!isMenuOpen);
   };
+
   return (
     <>
       <NoteAsideContainer visible={isMenuOpen}>

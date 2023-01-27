@@ -5,7 +5,21 @@ export type Project = {
   image: string;
 };
 
+// export type TreeNode = {
+//   title: string;
+//   date: string;
+//   urlPath: string;
+//   children: TreeNode[];
+// };
+
 export type TreeNode = {
+  title: string;
+  date: string;
+  urlPath: string;
+  children: TreeNode[];
+};
+
+export type SubTreeNode = {
   title: string;
   date: string;
   urlPath: string;

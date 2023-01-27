@@ -18,6 +18,11 @@ export const getStaticPaths = async () => {
 export const getStaticProps = async ({ params }) => {
   const pagePath = params.slug.join("/");
   const note = allNotes.find(
+    //? underscore
+    // 함수의 매개변수로 언더바( _ )를 사용하는 것은 JavaScript 개발자들의 관습이라고 할 수 있는데,
+    // normalFunc의 첫 번째 매개변수가 중요하지 않다는 것을 표현하기 위해 언더바( _ )로 선언합니다.
+    // 또 다른 이유로 화살표 함수의 매개변수가 존재하지 않은 경우 사용됩니다.
+
     (_) =>
       _.pathSegments.map((_: PathSegment) => _.pathName).join("/") === pagePath
   )!;
@@ -31,6 +36,7 @@ const buildTree = (
   parentPathNames: string[] = []
 ): TreeNode[] => {
   const level = parentPathNames.length;
+
   return notes
     .filter(
       (_) =>
