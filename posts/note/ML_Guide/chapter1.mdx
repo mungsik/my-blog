@@ -119,5 +119,130 @@ export const Highlight = ({children, color}) => (
         # [6 7 8 9]
         ```
         <br></br>
+---
+
+### 2. Pandas
+
+- **DataFrame**
+
+    여러 개의 행과 열로 이뤄진 2차원 데이터를 담는 데이터 구조체이다.
+
+    1. Index vs. Series
+
+        Index는 RDBMS의 PK처럼 개별 데이터를 고유하게 식별하는 Key 값이다.
+
+        Series와 DataFrame은 모두 Index를 Key값으로 가지고 있다.
+
+        Series와 DataFrame의 가장 큰 차이는 Series는 칼럼이 하나 뿐인 데이터 구조체이고, DataFrame은 칼럼이 여러 개인 데이터 구조체라는 것이다.
+
+    2. DataFrame 데이터 삭제
+
+        drop() 메서드를 이용한다. 원형은 다음과 같다.
+
+        *DataFrame.drop(labels=None, <Highlight color="#25c2a0">axis=0</Highlight>, index=None, columns=None, level=None, <Highlight color="#25c2a0">inplace=False</Highlight>, errors='raise')*
+
+        - axis : DataFrame의 로우를 삭제할 때는 axis=0, 칼럼을 삭제할 때는 axis=1로 설정
+
+        - 원본 DataFrame은 유지하고 드롭된 DataFrame을 새롭게 객체 변수로 받고 싶다면 inplace=False로 설정(디폴트 값이 False)
+
+            ex) `titanic_drop_df = titanic_df.drop('Age_0', axis=1, inplace=False)
+
+        - 원본 DataFrame에 드롭된 결과를 적용할 경우에는 inplace=True를 적용
+
+            ex) `titanic_df.drop('Age_0', axis=1, inplace=True)
+
+        - 원본 DataFrame에서 드롭된 DataFrame을 다시 원본 DataFrame 객체 변수로 할당하면 원본 DataFrame에서 드롭된 결과를 적용할 경우와 같음.
+
+            (단, 기존 원본 DataFrame 객체 변수는 메모리에서 추후 제거됨.)
+
+            ex) `titanic_df = titanic_df.drop('Age_0', axis=1, inplace=False)
+
+ - **Index 객체**
+
+        판다스의 Index 객체는 RDBMS의 PK와 유사하게 DataFrame, Series의 레코드를 고유하게 식별하는 객체이다.
+
+        - reset_index() 메서드
+
+            새롭게 인덱스를 연속 숫자 형으로 할당하며 기존 인덱스는 'index'라는 새로운 칼럼명으로 추가됨.
+
+            ![](/note/ML_Guide/reset_index.PNG)
+
+            reset_index() 는 인덱스가 연속된 int 숫자형 데이터가 아닐 경우에 다시 이를 연속 int 숫자형 데이터로 만들 때 주로 사용한다.
+
+            ![](/note/ML_Guide/reset.PNG)
+
+            reset_index()의 parameter 중 drop=True로 설정하면 기존 인덱스는 새로운 칼럼으로 추가되지 않고 삭제(drop) 된다.
+
+ - **데이터 셀렉션 및 필터링**
+
+    1. iloc vs. loc
+
+        1 ) iloc[]
+
+        위치 기반 인덱싱만 허용하기 때문에 행과 열의 좌표 위치에 해당하는 값으로 정숫값 또는 정수형의 슬라이싱, 팬시 리스트 값을 입력해줘야함.
+
+            ex) `data_df.iloc[0, 0]` (0)
+                `data_df.iloc[0, 'Name']` (X)
+
+        슬라이싱과 팬시 인덱싱은 제공하나 명확한 위치 기반 인덱싱이 사용되어야 하는 제약으로 인해 불린 인덱싱은 제공하지 않음.
+
+        iloc[]은 열 위치에 -1을 입력하여 DataFrame의 가장 마지막 열 데이터를 가져오는 데 자주 사용함.
+
+        2 ) loc[]
+
+        명칭(Label) 기반으로 데이터를 추출함.
+
+        행 위치에는 DataFrame 인덱스 값을, 그리고 열 위치에는 칼럼명을 입력해서 loc[인덱스값, 칼럼명]와 같은 형식으로 데이터를 추출할 수 있음.
+
+            ex) `data_df.loc['one', 'Name']`
+
+    2. 불린 인덱싱
+
+        <Highlight color="#25c2a0"> iloc / loc 와 같이 명확히 인덱싱을 지정하는 방식보다는 불린 인덱싱에 의존해 데이터를 가져오는 경우가 많다.</Highlight>
+
+ - **결손 데이터 처리하기**
+
+    1. isna()로 결손 데이터 여부 확인
+
+        모든 칼럼의 값이 NaN인지 아닌지를 True나 False로 알려줌.
+
+        `titanic_df.isna().sum()`
+
+        과 같이 <Highlight color="#25c2a0">sum()을 호출  시 True는 내부적으로 숫자 1로, False는 숫자 0으로 변환되므로 결손 데이터의 개수를 구할 수 있다.</Highlight>
+
+    2. fillna()로 결손 데이터 대체하기
+
+        `titanic_df['Cabin'] = titanic_df['Cabin'].fillna('C000')`
+
+        타이타닉 데이터 세트의 'Cabin'칼럼의 NaN 값을 'C000'로 대체함. <Highlight color="#25c2a0">이 때, `inplace = True` 파라미터를 추가해야 실제 데이터 세트 값이 변경됨.</Highlight>
+
+ - **apply lambda 식으로 데이터 가공**
+
+    1. if else 식 사용할 때 주의점
+
+        if 절의 경우 if 식보다 반환 값을 먼저 기술해야 한다. lambda 식 ':' 기호의 오른편에 반환 값이 있어야하기 때문이다.
+
+        ![](/note/ML_Guide/lambda.PNG)
+
+    2. else if 는 지원하지 않는다.
+
+        ```python
+        # 나이에 따라 세분화된 분류를 수행하는 함수 생성
+
+        def get_category(age):
+            cat = ''
+            if age <= 5: cat = 'Baby'
+            elif age <= 12: cat = 'Child'
+            elif age <= 18: cat = 'Teenager'
+            else : cat = 'Eldery'
+
+            return cat
+
+        # lambda 식에 위에서 생성한 get_category() 함수를 반환값으로 지정.
+        # get_category(X)는 입력값으로 'Age' 칼럼 값을 받아서 해당하는 cat 반환
+
+        titanic_df['Age_cat'] = titanic_df['Age'].apply(lambda x : get_category(x))
+        titanic_df[['Age', 'Age_cat']].head()
+        ```
 
 
