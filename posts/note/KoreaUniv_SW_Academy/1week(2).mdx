@@ -1,0 +1,112 @@
+---
+title: 1주차 정리 -2
+date: 2023-03-05
+---
+
+export const Highlight = ({children, color}) => (
+    <span
+        style={{
+        backgroundColor: color,
+        borderRadius: '5px',
+        color: '#fff',
+        padding: '0.2rem',
+        }}>
+        {children}
+    </span>
+    );
+
+### 함수 호출 방식의 종류
+
+    1. 참조에 의한 호출 (call by reference)
+    2. 값에 의한 호출 (call by value)
+    3. 주소에 의한 호출 (call by address)
+
+파이썬에서는 **call by assignment**를 사용하는데, 불변 객체는 값에 의한 호출, 가변 객체는 참조에 의한 호출 방식으로 할당하여 사용된다. 즉, 1,2번 혼합이다.
+
+    1. 참조에 의한 호출
+
+    ```Python
+    my_param = ["before"]
+
+    def function(value):
+        print(id(value))
+        value.append("after")
+        print(id(value))
+
+    print(my_param, id(my_param))
+    function(my_param)
+    print(my_param, id(my_param))
+
+    # ['before'] 1960699687104
+    # 1960699687104
+    # 1960699687104
+    # ['before', 'after'] 1960699687104
+    ```
+
+        - 함수에 파라미터를 전달하면 전달된 그 `자체`를 사용함.
+        - 함수 내에서 파라미터로 전달된 변수가 변경되면 함수 밖에서도 변경됨.
+
+    > 파이썬에서는 mutable object(list, dict, set)가 전달되는 경우 위처럼 작동함.
+
+    2. 값에 의한 호출
+
+    ```Python
+    my_param = ["before"]
+
+    def function(value):
+        print(id(value))
+        value = "after"
+        print(id(value))
+
+    print(my_param, id(my_param))
+    function(my_param)
+    print(my_param, id(my_param))
+
+    # ['before'] 1960699684544
+    # 1960699684544
+    # 1962792630192
+    # ['before'] 1960699684544
+    ```
+
+        - 함수에 파라미터를 전달하면 전달된 `값`을 `복사`하여 사용함
+        - 함수 scope 내부에서만 사용되며, 함수 밖의 변수에는 영향을 미치지 못함.
+
+    > 파이썬에서는 immutable object(int, float, tuple, str)가 전달되어 `값이 변경되는 경우` 위처럼 작동함. 값이 변경되지 않으면 아래의 참조에 의한 호출로 작동함.
+
+    3. 주소에 의한 호출
+
+    메모리 공간 주소를 가리키는 포인터가 있는 언어에서 사용할 수 있다. 주소에 의한 호출은 원본 변수의 값을 변경한다는 점에서 참조에 의한 호출과 동일한 결과를 낸다.
+
+    파이썬에서 구현이 불가능하다.
+
+### Parameter(매개변수) vs. Argument(전달인자)
+
+    - parameter는 함수 정의에서 정의된 **변수**다.
+    - argument는 함수를 호출할 때 실제로 함수에 전달되는 **값**이다.
+
+    ```python
+    def func(param1, param2):
+        return param1 + param2 # param1, param2가 parameter
+
+    func(10, 20) # 10, 20이 argument
+
+    # 30
+    ```
+
+### 용어 정리
+
+    - mutable(가변) : 값을 변경할 수 있는 객체들. list, set, dict 등
+    - immutable(불변) : 값을 변경할 수 없는 객체들. int, str, tuple, frozen set 등
+    - homogeneous : 안에 들어갈 데이터 타입이 같은 것. str, range, 문자열 등
+    - heterogeneous : 안에 들어갈 데이터 타입이 다른 것. set, list
+    - sequence type : 순서가 중요. indexing, slicing 가능. list, str, bytes, range 등
+    - 순서 중요 x : set, frozen set, dictionary 등
+
+### iterable, iterator
+
+    > 한 번에 하나의 member를 반환할 수 있는 obj(객체)를 의미. iterator로 변환이 가능.
+
+    - list, str, tuple 과 같은 모든 Sequence type
+    - dict, file object 혹은 sequence semantic을 가진 __iter__() method 나 __getitem__() method가 구현된 obj
+    - 일반적으로 iterator로 변환 후 사용됨.
+    
