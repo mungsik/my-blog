@@ -1,0 +1,166 @@
+---
+title: 2주차 정리
+date: 2023-03-05
+---
+
+export const Highlight = ({children, color}) => (
+    <span
+        style={{
+        backgroundColor: color,
+        borderRadius: '5px',
+        color: '#fff',
+        padding: '0.2rem',
+        }}>
+        {children}
+    </span>
+    );
+
+### None
+
+    > NoneType 형의 유일한 값. None은 기본 인자가 함수에 전달되지 않을 때처럼, 값의 부재를 나타내는 데 자주 사용된다.
+
+    1. **None**은 다음과는 구별된다.
+
+        - empty string(""), empty list([]), empty set(set()), empty dictionary({})
+        - False
+        - 0
+
+    2. **None** 의 사용 예시
+
+        - 값이 존재하지 않는 경우(값을 알 수 없는 경우)
+            ex. '멍식이' 라는 사람은 존재하되 나이를 현 시점에서는 알 수 없는 경우 "None"으로 정의 한 후, 추후 정보 취득 시 변경
+            ```python
+            x = {}
+            x['멍식이'] = None
+            x['파이썬'] = 100
+            x
+
+            # {'멍식이' : None, '파이썬' : 100}
+            ```
+
+        - 값이 "없음"일 경우
+            ex. 멍식이는 미혼이어서 배우자의 이름이 없는 경우이므로, "None"으로 정의한다.
+            ```python
+            y = {'파이썬' : '코딩', '멍식이' : None}
+            for key, value in y.items():
+                if not (y[key] is None):
+                    print(key, '배우자명:', value)
+                else:
+                    print(key, '미혼임')
+
+            # 파이썬, 배우자명: 코딩
+            # 멍식이, 미혼임
+            ```
+
+        - 값이 정의되지 않은 경우
+            ex. 함수의 return value가 정의되지 않은 경우. 함수에서 return 명령어 없이 처리 완료된 경우에는 "None"으로 그 결과값을 리턴
+            ```python
+            def add(x,y):
+                z = x + y
+
+            x = add(3,4)
+            print(x)
+
+            # None
+            ```
+
+        - 값을 초기화하여 사용하는 경우
+            ex. 함수 호출 시 default 값 "None"을 활용하여 값을 초기화하여 사용 가능하다. 대부분의 함수 및 메소드에서 해당 argument 값을 설정하지 않았을 경우에는 default 값으로 "None"이 설정되도록 한다.
+
+            ![](/note/KoreaUniv_SW_Academy/8.PNG)
+
+### sqlite3 데이터 삽입
+
+    -1. Named Parameter : Dictionary 사용
+
+        ```python
+        cur.execute('INSERT INTO artist VALUES(:pk,:name)',
+            {'pk':None, 'name':'가수2'})
+        ```
+
+    -2. Parameter : Tuple 사용
+
+        ```python
+        cur.execute('INSERT INTO artist VALUES(?,?)', [None, '가수1'])
+        ```
+
+    -3. List 사용
+
+        ```python
+        data = [['가수3'], ['가수4']]
+        cur.executemany('INSERT INTO artist(name) VALUES(?)', data)
+        ```
+
+    -4. 기본 String Query 사용
+
+        ```python
+        cur.execute("INSERT INTO PhoneBook Values('Derick', '010-1234-5678');")
+        ```
+
+### JOIN
+
+    ![](/note/KoreaUniv_SW_Academy/9.PNG)
+
+    -1. INNER JOIN
+
+        <Highlight color="#FFB84C">교집합</Highlight>이라고 보면 된다.
+
+        ```python
+        SELECT * FROM A INNER JOIN B ON A.번호 = B.번호
+        ```
+
+        ![](/note/KoreaUniv_SW_Academy/10.PNG)
+
+        A 테이블과 B 테이블이 모두 가지고 있는 데이터만이 검색됨.
+
+    -2. OUTER JOIN
+
+        > FULL OUTER JOIN을 제외하곤 <Highlight color="#FFB84C">특정 테이블을 기준</Highlight>으로 데이터를 보여준다.
+
+        -1. LEFT OUTER JOIN
+
+        왼쪽 테이블을 기준으로 JOIN 하는 것이다. 왼쪽 테이블 A의 모든 데이터와 A와 B 테이블의 중복 데이터들이 검색된다.
+
+        ```Python
+        SELECT * FROM A LEFT OUTER JOIN B ON (A.번호 = B.번호)
+        ```
+
+        ![](/note/KoreaUniv_SW_Academy/11.PNG)
+
+        -2. RIGHT OUTER JOIN
+
+        오른쪽 테이블을 기준으로 JOIN 하는 것. 오른쪽 테이블 B의 모든 데이터와 B와 A 테이블의 중복 데이터들이 검색됨.
+
+        ![](/note/KoreaUniv_SW_Academy/12.PNG)
+
+### Foreign Key
+
+    - foreign key 예시
+
+        ```python
+        CREATE TABLE grade (
+            num INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+            student_id CHAR(8) NOT NULL,
+            subject_name VARCHAR(10) NOT NULL,
+            score INT NOT NULL,
+            FOREIGN KEY(student_id) REFERENCESS student(student_id)
+        );
+        ```
+
+        grade 테이블의 student_id 컬럼은 student 테이블의 student_id를 참조하는 외래 키이기 때문에 위와 같이 설정했다. primary key 또는 unique 제약 조건이 설정된 컬럼만 참조의 대상이 될 수 있다.
+
+        여기서는 학생 테이블이 기준 테이블(부모 테이블)이고, 성적 테이블이 외래 키 테이블(자식 테이블)이다.
+
+        ![](/note/KoreaUniv_SW_Academy/13.PNG)
+
+    - 에러 : 부모 테이블에 없는 학번으로 성적 입력 시도하기
+
+        ```python
+        INSERT INTO grade (student_id, subject_name, score) VALUES ('11117', '캡스톤디자인', 56)
+
+        # Error Code: 1452. Cannot add or update a child row: a foreign key constraint fails (`tabledb`.`grade`, CONSTRAINT `grade_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`))
+        ```
+
+        student_id가 외래 키로 설정되어 있기 때문에 student 테이블에 없는 학번에 대해서는 입력이 안된다는 뜻이다.
+
+        외래 키를 잘 설정해놓으면 엄한 데이터가 테이블에 삽입되는 것을 막을 수 있다.
