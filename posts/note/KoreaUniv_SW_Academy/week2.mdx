@@ -1,5 +1,5 @@
 ---
-title: 2주차 정리
+title: 2주차 정리 - 1
 date: 2023-03-05
 ---
 
@@ -14,6 +14,8 @@ export const Highlight = ({children, color}) => (
         {children}
     </span>
     );
+
+💨 월요일, 화요일
 
 ### None
 
@@ -164,3 +166,291 @@ export const Highlight = ({children, color}) => (
         student_id가 외래 키로 설정되어 있기 때문에 student 테이블에 없는 학번에 대해서는 입력이 안된다는 뜻이다.
 
         외래 키를 잘 설정해놓으면 엄한 데이터가 테이블에 삽입되는 것을 막을 수 있다.
+
+### typing.Callable
+
+    함수를 인자로 가지는 경우에는 Callable[[Arg1Type, Arg2Type], ReturnType] 타입을 활용하면 된다.
+
+    ```python
+    from typing import Callable
+
+    def add(x: int, y: int) -> int:
+        return x + y
+
+
+    def subtract(x: int, y: int) -> int:
+        return x - y
+
+
+    def call_func(x: int, y: int, func: Callable[[int, int], int]) -> int:
+        return func(x, y)
+
+
+    call_func(10, 20, add)
+    call_func(10, 20, subtract)
+    ```
+
+    콜백 함수의 인자를 신경 쓰지 않고 리턴 타입만을 명시해주고 싶은 경우엔 해당 타입의 인자 자리에 **...**(Ellipsis)를 넣어주면 된다.
+
+    ```python
+    from typing import Callable
+
+    def calculate(fn: Callable[..., float], *args: float) -> float:
+        return fn(args)
+
+    def multiply(*args: float) -> float:
+        v = 1
+        for arg in args:
+            v *= arg
+        return v
+    ```
+
+    ✅ Type Annotation
+
+    아래는 Type Annotation을 적용한 함수. add 함수의 인자 x,y가 정수형이라는 것과 **-> int** 표현식을 통해 함수의 반환값이 정수형이라는 것을 알 수 있다.
+
+    ```python
+    def add(x: int, y: int) -> int:
+    return x + y
+    ```
+
+### instance
+
+    1. 클래스 vs 객체 vs 인스턴스
+
+        - 클래스
+
+            주로 어떤 틀에 비유된다. 예를들어, 와플 틀 등등.. 그 이유는 클래스는 **객체(Object)**를 정의하고 만들기 위한 변수와 메서드의 집합이기 때문이다.
+
+            이런 틀에서 만들어진 하나하나의 와플은 객체(Object)이다. 클래스(Class)에 의해 생성된 이런 객체들은 서로 영향을 끼치지 않는다.
+
+            car라는 클래스를 정의하고 간단하게 on이라는 메서드(method)를 정의해보자. 클래스의 객체가 소프트웨어에 실체화되면 이제 그것을 **인스턴스(instance)**라고 한다.
+
+            ```python
+            class car:
+                def on(self):
+                    print("차량의 시동을 켭니다.")
+
+            porche = car()
+            porche.on()
+
+            # 차량의 시동을 켭니다.
+            ```
+
+                - porche는 객체(Object)이다.
+                - porche 객체(Object)는 car 클래스(class)의 인스턴스(instance)이다. 즉, porche는 car의 인스턴스이다.
+
+            인스턴스(instance)라는 표현은 특정 객체가 어떤 클래스의 객체인지 <Highlight color="#FFB84C">관계를 중점으로 표현할 때</Highlight> 사용한다.
+
+    2. 메서드(method) vs 생성자(constructor)
+
+        - 메서드(method)
+
+            메서드(method) 속성은 클래스 안에서 구현하는 함수를 말한다.
+
+            매서드의 첫 번째 매개변수 이름은 클래스의 인스턴스 자신이다. 따라서 관례적으로 self라는 이름으로 사용한다.(pep8 규칙)
+
+            ```python
+            class example(): # example이라는 클래스를 만듦
+                def __init__(self):
+                    self.array = []
+                    print('__init__()메서드를 통해 객체를 초기화 했습니다.')
+
+                # 메서드 정의
+                def array_append(self, item): # 첫 번째 인수는 self임!
+                    self.array_append(item)
+
+            ex1 = example() # ex1은 객체이자 example()의 인스턴스!
+            print(ex1.array)
+
+            ex1.array_append(10)
+            print(ex1.array)
+
+            # __init__() 메서드를 통해 객체를 초기화했습니다.
+            # []
+            # [10]
+            ```
+
+        - 생성자(constructor)
+
+            앞서 car 클래스를 정의했을 때와는 다른 점이 보인다. 바로 __init__ 메서드이다. 메서드 이름이 __init__ 인 경우 이 메서드를 **생성자(constructor)** 라고 한다.
+
+            생성자는 객체가 생성되면 자동으로 호출돼 객체를 **초기화**한다. 위 예시에서도 ex1 객체를 만들었을 때, __init__ 메서드 즉, 생성자에 의해 array라는 객체 변수가 생성됐고 메서드가 자동으로 호출됐다는 증거로 print문이 작동했다.
+
+            ```python
+            # Hello.__init__() 메서드가 객체를 초기화함.
+
+            class Hello():
+                def __init__(self, value):
+                    self.value = value
+                    print('__init__() 메서드를 통해 객체를 초기화 했습니다.')
+                    print(f'인스턴스의 value 값은 {self.value} 입니다.')
+
+            a = Hello(20)
+
+            # __init__() 메서드를 통해 객체를 초기화했습니다.
+            # 인스턴스의 value 값은 20입니다.
+            ```
+
+            Hello 클래스의 인스턴스 a는 생성되자마자 value 객체 변수가 생성된 것을 확인할 수 있고, 마찬가지로 print문 작동도 한다.
+
+### LEGB 규칙
+
+    > 파이썬에서 변수에 값을 바인딩하거나 변수의 값을 참조하는 경우 **LEGB 규칙**을 따른다.
+
+    - L : Local의 약자로 함수 안을 의미한다.
+    - E : Enclossed function locals의 약자로 내부함수에서 자신의 외부 함수의 범위를 의미한다.
+    - G : Global의 약자로 함수 바깥 즉, 모듈 범위이다.
+    - B : Built-in의 약자로 open, range와 같은 파이썬 내장 함수들을 의미한다.
+
+    1. 변수를 참조하는 경우
+
+        ```python
+        a = 10
+
+        def test():
+            a = 20
+            print(a)
+
+        test()
+        ```
+
+        위 코드에서 test 함수가 호출되면 변수가 바인딩하는 값을 출력한다. 이 경우, a라는 변수가 참조(reference) 되었으므로 L, E, G, B순으로 변수를 탐색한다.
+        먼저 test 함수 안이 바로 Local 영역이다. a는 Local 영역 안에 존재하므로 Local 영역의 a 라는 변수가 바인딩하는 값인 20이 화면에 출력된다.
+
+        ```python
+        a = 10
+
+        def test():
+            print(a)
+
+        test()
+        ```
+
+        L,E,G,B 순으로 a라는 변수를 탐색하는데 Local 영역에는 a라는 변수가 없고 현재 코드에는 Enclosed function local 영역은 존재하지 않는다.
+        그 다음에 Global 영역을 탐색할 때 Global 영역에 a가 존재하므로 10이 출력된다.
+
+    2. 변수 바인딩
+
+        ```python
+        a = 10
+
+        def test():
+            a = 20
+            print(a)
+
+        test()
+        print(a)
+
+        # 20
+        # 10
+        ```
+
+        test 함수가 호출될 때 a는 20을 바인딩하는데 이 때 a라는 변수는 Local 영역에 생성되었다가 함수 호출이 끝날 때 소멸된다. 즉, 함수 내에서 생성되는 a는 Global 영역에 있는 a와 전혀 다른 변수이다.
+        따라서 Local 영역에서 Global 영역에 있는 변수 값을 수정할 수 없다.
+
+        ```python
+        a = 10
+
+        def test():
+            global a
+            a = 20
+
+        test()
+        print(a)
+
+        # 20
+        ```
+
+        함수 내에서 Global 영역의 변수 값을 수정하려면 위와 같이 global 이라는 키워드를 사용해서 Local 영역에서 사용하는 변수가 Global 영역의 변수임을 선언해주면 된다.
+
+---
+
+💨 수요일
+
+### SQLAlchemy Modeling Relationships
+
+> 모델들 간의 관계는 한 모델에 대한 액션이 다른 모델에게도 발생할 수 있는지를 결정한다. 가령, 사용자의 계정을 삭제하면 사용자와 관계된 모든 사진, 문서 등이 함께 삭제된다.
+
+    1. db.relationship() 을 쓰는 이유
+
+        Join된 데이터가 필요할 때 Join된 테이블을 저장하고 거기서 값을 가져오는 번거로움이 있다. SQLAlchemy ORM에서는 **db.relationship()**을 한 번 설정하면 우리가 원할 때마다 Join 구문을 생성해준다.
+
+    2. 연관 관계
+
+        연관 관계는 1 대 1, 1 대 N, N 대 M 등의 구조로 이루어져 있다.
+
+        -  one to many
+
+            1 대 N 관계로 자식 테이블이 부모 테이블을 외래키로 참조하는 관계를 객체로 구현하는 것이다. 이 때, 부모 테이블에 해당하는 객체는 relationship() 메서드를 통해서 자식 객체를 참조하는 참조 변수를 가지게 되는데,
+            이 때 참조 변수는 N개의 자식을 참조하기 때문에 리스트 형식이 된다.
+
+            이 때, 만약 자식 객체에서도 부모 객체에 접근하고 싶은 경우에는 back_populates 속성을 사용하면 된다. 이 속성을 지정해두면 해당 객체의 값이 변할 때 연관된 객체에서 지정된 속성을 찾아서 값을 동기화 해준다.
+
+            ```python
+            class User(Base):
+                __tablename__ = "user"
+
+                #...
+
+                tema_id = Column(Integer, ForeignKey("team.id")) # 자식 객체는 외래키로 부모 객체를 참조한다.
+                team = relationship("Team", back_populates="users") # 부모 객체를 참조하는 참조 변수
+
+            class Team(Base):
+                __tablename__ = "team"
+
+                # ...
+
+                users = relationship("User", back_populates="team") # 자식 객체들을 참조하는 참조 변수
+            ```
+
+        - many to one
+
+            N 대 1 관계를 의미한다. 부모 객체가 자식 객체를 외래키로 참조하고, 자식 객체가 relationship으로 부모 객체 클래스의 객체들을 참조하는 리스트를 가지게 된다.
+
+        - one to one
+
+            1 대 1 관계로 필수적으로 양방향 참조가 가능하도록 구현해야한다. one to many에서 양쪽이 서로 참조가 가능하도록 구현한 상태에서 one의 역할에 있는 클래스가 대상 객체를 여러 개가 아닌 하나만 참조하도록 변경해주면 된다.
+            이 때, uselist 속성을 False로 지정해주면 collection이 아닌 single object를 참조하게 된다.
+
+            ```python
+            class User(Base):
+                __tablename__ = "user"
+
+                #...
+
+                tema_id = Column(Integer, ForeignKey("team.id"))
+                team = relationship("Team", back_populates="users") # many-to-one 관계의 참조 변수
+
+            class Team(Base):
+                __tablename__ = "team"
+
+                # ...
+
+                # one-to-may의 참조 변수. uselist를 False로 설정하여 하나의 객체만 참조하도록 설정
+                users = relationship("User", back_populates="team", uselist=False)
+            ```
+
+        - many to many
+
+            N 대 M 의 관계를 표현한 것으로 두 객체 사이에 연관 테이블을 추가하여 연관관계를 구현하도록 한다. 연관관계는 relationship.secondary 속성으로 지정한다.
+
+            ```python
+            association_table = Table(
+            "association",
+            Base.metadata,
+            Column("left_id", ForeignKey("left.id"), primary_key=True),
+            Column("right_id", ForeignKey("right.id"), primary_key=True)
+            )
+
+            class Left(Base):
+                __tablename__ = "left"
+                # ...
+                rights = relationship("Right", secondary=association_table, back_populates="lefts")
+
+
+            class Right(Base):
+                __tablename__ = "right"
+                # ...
+                lefts = relationship("Left", secondary=association_table, back_populates="rights")
+            ```

@@ -1,0 +1,221 @@
+---
+title: 2주차 정리 - 2
+date: 2023-03-08
+---
+
+export const Highlight = ({children, color}) => (
+    <span
+        style={{
+        backgroundColor: color,
+        borderRadius: '5px',
+        color: '#fff',
+        padding: '0.2rem',
+        }}>
+        {children}
+    </span>
+    );
+
+💨 수요일
+
+### global, nonlocal
+
+    - 변수의 범위(scope)
+
+        아주 단순하게 두 구역으로 나누면 함수 외부를 전역(global / module) 범위라고 하고, 함수 내부를 지역(local / funcion) 범위라고 한다. 또한 함수를 중첩했을 때 외부 함수와 내부 함수의 사이에서 생겨나는 비지역(nonlocal / enclosing) 범위라는 것도 있다.
+
+        ```python
+        # outer(), inner() 함수 입장에서 전역(global) 범위
+
+        def outer():
+            # outer() 함수 입장에서 지역(local) 범위
+            # inner() 함수 입장에서 비지역(nonlocal) 범위
+
+            def inner():
+                # inner 함수 입장에서 지역(local) 범위
+        ```
+
+    - variable shadowing
+
+        서로 다른 범위에서는 변수 이름 충돌이 발생하지 않으며 안 쪽 범위와 바깥 쪽에서  선언된 변수와 같은 이름의 변수를 생성할 수 없다는 것이다.
+
+        ```python
+        var = "지역 변수"
+
+        def outer():
+            var = "비지역 변수"
+
+            def inner():
+                var = "지역 변수"
+        ```
+
+        위에 선언된 3개의 `var` 변수는 이름만 같을 뿐 서로 다른 값을 저장할 수 있는 엄연히 다른 변수이다.
+
+    - global 키워드
+
+        ```python
+        num = 0
+
+        def change_num():
+            num = 100
+            print(num)
+
+        change_num()
+
+        print(num)
+
+        # 100
+        # 0
+        ```
+
+        위와 같이 동일한 이름의 지역 변수를 생성하지 않고, 전역 변수의 값을 함수 내부에서 변경하고 싶다면 `global` 키워드를 사용하면 된다.
+
+        함수 안에서 변수 앞에 `global` 키워드를 붙여주면 해당 변수는 새로운 지역 변수가 되지 않고 함수 밖에서 이미 선언된 전역 변수를 가리키게 된다.
+
+        ```python
+        num = 0
+
+        def change_num():
+            global num
+            num = 100
+            print(num)
+
+        change_num()
+
+        print(num)
+
+        # 100
+        # 100
+        ```
+
+    - nonlocal 키워드
+
+        > `global` 키워드는 일반 함수 내에서 전역 변수(global / module) 변수를 대상으로 사용하는 반면에 `nonlocal` 키워드는 중첩 함수 내에서 비지역(nonlocal / closing) 변수를 대상으로 사용한다는 것이다.
+
+        ```python
+        def print_nums():
+            num = 0 # 비지역 변수
+
+            def change_num():
+                print(num)
+
+            change_num()
+
+            print(num)
+
+        print_nums()
+
+        # 0
+        # 0
+        ```
+
+        `print_nums()` 함수에서 선언된 `num` 변수를 `change_num()` 함수 안에서 그대로 접근하기 떄문에 위와 같은 결과가 나온다.
+
+        ```python
+         def print_nums():
+            num = 0
+
+            def change_num():
+                num = 100
+                print(num)
+
+            change_num()
+
+            print(num)
+
+        print_nums()
+
+        # 100
+        # 0
+        ```
+
+        variable shadowing 현상으로 인해서 `change_num()` 함수 안에서 `num` 이라는 새로운 지역 변수가 생성되었다.
+
+        만약에 `change_num()` 함수 바깥에서 선언된 `num` 이라는 비지역 변수의 값을 `change_num()` 함수 안에서 갱신하고 싶은 경우에는 `num` 변수 앞에 `nonlocal` 키워드만 붙여주면 된다.
+
+        ```python
+        def print_nums():
+            num = 0
+
+            def change_num():
+                nonlocal num
+                num = 100
+                print(num)
+
+            change_num()
+
+            print(num)
+
+        print_nums()
+
+        # 100
+        # 100
+        ```
+
+        변수 앞에 nonlocal 키워드를 붙여주면 해당 변수는 새로운 지역 변수가 되지 않고 함수 밖에서 이미 선언된 비전역 변수를 가리키게 된다.
+
+### Enclosed function locals
+
+    앞서 정리한 LEGB를 이어가 보자.
+
+    ```python
+    def outer():
+        num = 3
+        def inner():
+            print(num)
+        return inner
+
+    f = outer()
+    f()
+
+    # 3
+    ```
+
+    탐색하는 순서는 다음과 같다.
+
+    내부 함수 inner에는 num이 없음 -> Enclosed function locals 영역 탐색 : num이 바로 이 영역 안에 있는 변수.
+
+    ![](/note/KoreaUniv_SW_Academy/14.PNG)
+
+    f는 inner 함수 객체를 바인딩한다. 그래서 내부 함수 객체는 외부 함수인 outer 의 호출이 끝나고 메모리에서 삭제되지 않는다.
+    하지만 num 값은 outer 함수 외부로 리턴되지 않는다. 그래서 outer 함수의 호출이 끝날 때 num이 바인딩하는 값인 3은 메모리에서 삭제된다.
+
+    f라는 변수가 바인딩하는 함수 객체는 print(num)이라는 코드를 바인딩하고 있다. f()를 통해서 f 가 바인딩하는 함수 객체를 출력하면 num 값은 에러가 아닌 3 이 나온다.
+    그 이유는 내부 함수 객체는 함수 객체가 생성될 때 자신이 참조하는 Enclosed function locals 영역의 변수를 자신의 객체 안에 저장해두기 때문이다.
+
+    이 때, f 라는 변수가 바인딩하는 function 타입의 객체는 `__closure__` 라는 속성을 갖는다.
+
+### 클로저
+
+    1. 핵심 개념
+
+    - 외부 함수에서 내부 함수를 정의한다.
+    - 내부 함수에서 참조하는 변수는 내부 함수 객체에 같이 저장한다.
+    - 외부 함수는 내부 함수 객체를 리턴한다.
+
+    ```python
+    def outer(num):
+        def inner():
+            print(num)
+    return inner
+    ```
+
+    외부 함수인 outer가 호출될 때 내부 함수인 inner 함수의 객체를 생성하고 이를 리턴한다. inner 함수 객체에는 enclosed function local 영역의 num 값이 `__closure__` 속성에 저장된다.
+
+    outer 함수를 호출하면 생성된 inner 함수 객체의 주소가 리턴되며 이를 f1과 f2 라는 변수가 바인딩한다. 또한 내부 함수에 대한 객체가 생성될 때 자신이 참조하는 num 값인 3과 4를 내부 함수의 객체에 같이 저장한다.
+
+    2. 클로저 vs. 클래스
+
+    클로저의 예는 클래스로도 구현 가능하다.
+
+    ```python
+    class Outer:
+        def __init__(self, num):
+            self.num = num
+
+        def __call__(self):
+            print(self.num)
+    ```
+
+    클래스에 `__call__` 메서드를 정의해두면 '객체( )'와 같이 사용할 때 `__call__` 메서드가 호출된다.
+
+    함수도 클래스의 객체이며 우리가 함수를 호출할 때 '함수이름( )'과 같이 사용할 수 있었던 이유가 바로 `__call__` 메서드 덕분이다.
