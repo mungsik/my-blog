@@ -219,3 +219,152 @@ export const Highlight = ({children, color}) => (
     클래스에 `__call__` 메서드를 정의해두면 '객체( )'와 같이 사용할 때 `__call__` 메서드가 호출된다.
 
     함수도 클래스의 객체이며 우리가 함수를 호출할 때 '함수이름( )'과 같이 사용할 수 있었던 이유가 바로 `__call__` 메서드 덕분이다.
+
+### 언더바
+
+    언더바를 사용하는 경우
+
+        - 인터프리터에서의 마지막 값
+        - 무시하는 값
+        - (앞 언더바 1개) 모듈 내에서만 변수 / 함수를 사용할 때
+        - (뒤 언더바 1개) 파이썬 변수 / 함수명 충돌을 피하기 위해
+        - (앞 언더바 2개) 네임 맹글링
+        - (앞뒤 언더바 2개씩) 매직 메소드
+
+    1. 인터프리터에서의 마지막 값
+
+        ```python
+        3 + 4 # 7
+        _ + 3 # 10
+        ```
+
+        언더바는 앞선 코드 실행의 결과가 들어간 것을 알 수 있다.
+
+    2. 무시하는 값
+
+        ```python
+        list1 = [1,2,3,4,5]
+        a, b, _, d, e = list1
+
+        a # 1
+        b # 2
+        print(_) # 3
+        ```
+
+        리스트 내의 원소를 각각 네이밍 할 때 언더바를 사용하면 해당 위치의 원소는 무시하겠다는 의미인데, 언더바를 변수로 생각하고 print하면 결과가 나오긴한다.
+
+        ```python
+        list1 = [[1,2], [3,4], [5,6]]
+
+        for _ in list1:
+            print(_)
+
+        # [1,2]
+        # [3,4]
+        # [5,6]
+        ```
+
+        반복문 속에서 변수 네이밍 하기 귀찮을 때 저렇게 써도 된다.
+
+    3. 앞 언더바 1개 : 변수 / 함수를 모듈 내에서만 사용하고 싶을 때
+
+        ```python
+        # underbar.py
+        def under():
+            print("앞에 언더바 사용 X")
+
+        def _under():
+            print("앞에 언더바 사용")
+
+        from underbar import *
+        under() # 앞에 언더바 사용 X
+
+        _under() # NameError: name '_under' is not defined
+        ```
+
+        underbar 모듈의 모든 함수를 임포트 했지만 `under`함수는 사용할 수 있는 반면. `_under` 함수는 사용할 수 없다.
+
+        ```python
+        from underbar import under, _under
+
+        under() # 앞에 언더바 사용
+        _under() # 앞에 언더바 사용 X
+        ```
+
+        그러나 위 코드와 같이 함수 이름을 직접 적어주면 앞에 언더바가 들어가 있어도 사용할 수 있다.
+
+    4. 뒤 언더바 1개 : 파이썬 기본 변수 / 함수명 충돌을 피하고 싶은 경우
+
+        ```python
+        list_ = [1,2,3,4,5]
+        print(list_) # [1,2,3,4,5]
+        ```
+
+        list는 파이썬 자료형이라서 변수명으로 사용할 수 없는데, 뒤에 언더바를 붙여주면 사용할 수 있다.
+
+    5. 앞 언더바 2개 : 네임 맹글링(name mangling)
+
+        - 외부에서 클래스 속성값에 접근하지 못하도록 할 때
+
+            ```python
+            class Mangling():
+                def __init__(self):
+                    self.name = "멍식이"
+                    self.mangle = "맹글"
+
+            mangling = Mangling()
+            print(mangling.name) # 멍식이
+            print(mangling.mangle) # 맹글
+            ```
+
+            name과 mangle 모두 출력되는 것을 볼 수 있다.
+
+            ```python
+            class Mangling():
+                def __init__(self):
+                    self.name = "멍식이"
+                    self.__mangle = "맹글"
+
+            mangling = Mangling()
+            print(mangling.name) # 멍식이
+            print(mangling.__mangle) # AttributError: 'Mangling' object has no attribute '_mangle'
+            ```
+
+            mangle 속성값에 접근할 수 없다.
+
+            - 오버라이딩 방지용
+
+            ```python
+            class Mangling():
+                def __init__(self):
+                    self.name = "멍식이"
+                    self.mangle = "맹글"
+
+            class Overriding():
+                def __init__(self):
+                    super().__init__()
+                    self.name = "맹식이"
+                    self.mangle = "맹글맹글"
+
+            overriding = Overriding()
+            print(overriding.name) # 맹식이
+            print(overriding.mangle) # 맹글맹글
+            ```
+
+            정상적으로 오버라이딩 된 것을 볼 수 있다.
+
+            ```python
+            class Mangling():
+                def __init__(self):
+                    self.name = "멍식이"
+                    self.__mangle = "맹글"
+
+            class Overriding():
+                def __init__(self):
+                    super().__init__()
+                    self.name = "맹식이"
+                    self.__mangle = "맹글맹글"
+
+            overriding = Overriding()
+            print(overriding.name) # 맹식이
+            print(overriding._mangle) # AttributeError: 'Overriding' object has no attribute '__mangle'
