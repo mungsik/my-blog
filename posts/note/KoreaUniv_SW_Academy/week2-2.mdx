@@ -128,9 +128,6 @@ export const Highlight = ({children, color}) => (
     print(test_object.__dict__['name']) # mungsik
     ```
 
-### delegation, composition, mro, 상속, 덕타이핑, comprehension, 정규식
-
-
 ### 메타 클래스
 
     메타클래스는 클래스를 만드는 클래스인데, 이 메타클래스를 구현하는 방법은 두 가지가 있다.
@@ -150,3 +147,421 @@ export const Highlight = ({children, color}) => (
     meta # <__main__.MetaClass at 0x1b583889e40>
     ```
 
+### 죽음의 다이아몬드와 파이썬 메서드 결정 순서 및 mro
+
+    - 죽음의 다이아몬드
+
+    보통은 하나의 부모 클래스만 상속 받지만 종종 아래 그림과 같이 여러 부모 클래스를 상속 받는 경우가 있다. 만약 여기서 `D` 클래스에서 상속 받은 `foo()` 메서드를 호출했다면 어느 부모 클래스에 있는 메서드를 호출해야 할까?
+    `B` ? `C` ? 둘 다? 만약 둘 다 호출했다면 어떤 클래스의 메서드를 먼저 호출해야 할까? 애매모호한 상황이다.
+
+    이런 애매모호한 <Highlight color="#FFB84C">다중 상속 구조를 죽음의 다이아몬드 라고 한다.</Highlight>
+
+    ![](/note/KoreaUniv_SW_Academy/23.PNG)
+
+    - 메서드 결정 순서
+
+    이런 문제를 피하기 위해 일부 프로그래밍 언어는 다중 상속을 허용하지 않는다. 하지만 Python은 다중 상속을 허용하고 있는데 위와 같은 문제를 피하기 위해 <Highlight color="#FFB84C">메서드 결정 순서(Method Resolution Order, MRO)</Highlight> 라는 것을 2.2버전부터 도입했다. MRO는 상속 받은 메서드를 호출 했을 때 어떤 부모 클래스를 먼저 호출할지 결정하는 시스템이다. Python에 MRO는 2.2 버전에 처음 도입되었으나 교차 상속 문제를 해결하지 못한 관계로 2.3에서 C3 선형화 라는 MRO 알고리즘으로 변경된 이후 유지되고 있다.
+
+    - 동작 방식
+
+    호출된 자식 클래스를 먼저 확인하고 그 다음에는 상속된 클래스들을 나열한 순서대로 확인한다.
+
+    위 코드는 다음과 같이 동작한다.
+
+        1. 먼저 `D.foo()`를 확인한다. `D` 클래스에 `foo()` 메서드가 존재하지 않으므로 부모 클래스를 확인한다. `(B, C)` 순으로 나열했으니 B 클래스를 먼저 확인한다.
+        2. `B.foo()`를 호출한다. `super().foo()` 는 바로 실행되지 않고 MRO 순서를 따른다. 이를 통해 중복 호출이 방지된다.
+        3. `C.foo()`를 호출한다.
+        4. `A.foo()`를 호출한다.
+
+    - 교차 상속
+
+    죽음의 다이아몬드 문제를 피하기 위해 중복 상속은 허용하나 교차 상속은 허용하지 않는다.
+
+    ```Python
+    class A:
+        pass
+
+    class B:
+        pass
+
+    class C(A, B):
+        pass
+
+    class (B, A):
+        pass
+
+    class E(C, D):
+        pass
+
+    # TypeError: Cannot create a consistent method resolution
+    # order (MRO) for bases A, B
+    ```
+
+    위 코드와 같이 `C`와 `D` 모두 A와 B를 상속 받으나 상속 받는 순서가 다르다. 이런 경우에는 어떤 클래스를 먼저 방문해야 하는지 선형화 하기 모호하므로 오류를 발생시킨다.
+    만약 `class D(A,B)` 였다면 정상적으로 작동했을 것이다.
+
+### Duck Typing & len()
+
+    우선 list를 하나 정의한 후 길이를 얻어보자.
+
+    ```python
+    array = list(range(10000)) # 리스트 정의
+    length_of_array = len(array) # 10000
+    ```
+
+    그런데 다른 객체 지향 언어에서는 다음과 같은 코드로 길이를 확인한다.
+
+    `array.size` 혹은 `array.length`
+
+    그렇다면 왜 위와 같은 코드로 알아내지 않고 `len`이란 함수를 쓰는걸까?
+
+    우선 몇 가지를 확인하고 가자.
+
+        1. `len`은 `__len__`을 호출한다.
+
+            ```python
+            class LenClass:
+                def __init__(self, *items):
+                    self.storage = list(items)
+
+                def __len__(self):
+                    return len(self.storage)
+
+                obj = LenClass(1, 2, 3, 4)
+                len(obj)  ### 4
+
+            ```
+
+            너무 뻔할 수 있지만 `len`이 `object.__len__`과 같다고 생각하면 안된다.
+
+            ```python
+            class LenClass:
+                def __len__(self):
+                    return "길이 체크 중!"
+
+            obj = LenClass(1,2,3,4)
+            obj.__len__()  ## 길이 체크 중!
+
+            len(obj) ## TypeError: 'str' object cannot be interpreted as an integer
+            ```
+
+            Pyhon이 제공하는 `len`함수는 class instance의 `__len__` method가 만들어져 있는지부터 체크하고, 그 return 유형과 값이 알맞는 지까지 검사해서 최종적으로 0 이상의 정수 값을 주게 된다.
+
+        2. `__iter__` 없이 iteration이 돌아갈 수 있다.
+
+            ```python
+            class ClassIterable:
+                def __init__(self, *items):
+                    self.storage = list(items)
+
+                def __getitem__(self, idx):
+                    return self.storage[idx]
+
+            obj = ClassIterable(1,2,3)
+
+            for item in obj:
+                print(item)
+
+            # 1
+            # 2
+            # 3
+            ```
+
+            Python이 어느 obj를 통해 for loop를 돌고자 할 때 다음과 같은 순서로 체크한다.
+
+                1. `__iter__` 가 제공되는지 체크하고 있으면 이를 통해 `iter(obj)`를 사용한다.
+                2. 없다면 `__getitem__`이 있는지 체크하고, 있으면 index 0 부터 시작해서 `IndexError`가 나올 때까지 `__getitem__(index)` 를 호출해서 for loop를 제공한다.
+
+            이러한 일종의 규약 (protocol) 때문에 `__getitem__` 하나만 있으면 iterable type이 되고, 추가 코드 없이 아래와 같은 것들이 가능하다.
+
+            ```python
+            obj[-1] # 3
+
+            obj[1:] # [2, 3]
+
+            list(obj) # iterable로 인자를 받는 모든 곳에 적용 가능 [1, 2, 3]
+            ```
+
+    위의 예제를 통해 알 수 있는 Python Data Type의 특징이 바로 'Duck Typing' 이다.
+
+    > 'duck'이라는 이름에 구애받지 않고 'duck' 이라는 종류에 맞는 행동을 하는 가를 구분의 기준으로 본다는 것이다. 그리고 Python은 그 '행동'을 magic method라는 이름으로 칭하고 수 많은 행동을 정해놓고, 계속 개정해 나간다.
+
+    대표적인 Python data type으로는 iterable, callable, awaitalbe 등이 있다.
+
+    Pyhon에서 interface는 강제되지 않는다. 위의 `__getitem__`을 통한 iterable typing이 대표적인 예이다. 이와 같이 코드레벨에서 강제되지 않고, 일종의 규약으로서 문서 레벨에서 제공되는 interface라고 할 수 있다.
+    이를 OOP에서 protocol이라고도 부른다.
+
+✅ 반복 정리
+
+    - Iterable vs. Iterator
+
+        for문을 통해 순회할 수 있는 객체를 iteralbe 하다고 생각하면 된다. 대표적으로 for문이 있다.
+
+        이렇게 for문을 통해 순회할 수 있는 객체를 iteralbe 하다고 생각하면 된다. 대표적으로 시퀀스 타입과 컬렉션 타입이 있다.
+
+        즉, iterble 한 것은 `__next__` 메소드가 존재하지 않고 iterator 는 `__next__`메소드가 존재한다.
+
+    - Iterable 객체를 Iterator로 변환하기
+
+        `iter` 함수를 이용하면 된다.
+
+        ```python
+        a = [1,2,3]
+        print(a.__next__) # AttributeError 발생
+
+        a = [1,2,3]
+        print(type(a)) # list
+        a = iter(a)
+        print(type(a)) # list_iterator
+        print(a.__next__) # 1
+        ```
+
+    - for문과 iterator
+
+        ![](/note/KoreaUniv_SW_Academy/24.PNG)
+
+        해당 리스트의 Iterator를 생성한 다음 `__next__` 메소드를 이용해 순회를 도는 방식이다. StopIteration 예외가 발생하면 순회를 마친다.
+
+### Comprehension
+
+    ✅ sequence / collection 타입
+
+        - collection type : list, tuple, set, dictionary와 같이 여러 개의 요소(객체)를 갖는 데이터 타입
+        - sequence type : list, tuple, str 등과 같이 순서가 존재하는 데이터 타입
+
+    > 한 sequence가 다른 sequence(iterable object)로부터 변형되어 구축될 수 있게한 기능이다. list / set / dictionary comprehension 등이 있다.
+
+    문법은 다음과 같다.
+
+    `[출력 표현식 for 요소 in 입력 sequence [if 조건식]]`
+
+    ```python
+    oldlist = [1, 2, 'A', False, 3]
+
+    newlist = [i*i for i in oldlist if type(i) == int]
+
+    print(newlist) # [1, 4, 9]
+    ```
+
+### decorator
+
+    decorator를 이해하기 위해 12 가지 스텝으로 나눠보자.
+
+    1. 함수
+
+        ```python
+        def foo():
+            return 1
+
+        foo() # 1
+        ```
+
+        Python에 있어서 함수는 def 키워드로 함수명과 파라미터의 리스트를 이용해 정의한다. 또한 괄호를 붙인 이름을 지정하여 함수를 지정할 수 있다.
+
+    2. 스코프
+
+        파이썬에서는 함수를 만들면 새로운 스코프가 만들어진다. 즉, 각각의 함수가 함수 이름으로 된 공간을 가지고 있다는 의미이다.
+        `local()` 이라는 함수로 자신이 가진 로컬 이름 공간의 값을 사전형으로 반환한다.
+
+        ```python
+        def foo(arg):
+            x = 10
+            print(locals())
+
+        foo(20)  ## {'x': 10, 'arg': 20}
+        ```
+
+    3. 변수의 해결 규칙
+
+        파이썬에서의 변수의 해결 룰은 다음과 같다.
+
+            1. 작성할 때는 항상 새로운 변수가 그 이름 공간 안에 만들어진다.
+            2. 참고는 먼저 이름공간 내부터 검색하고 없으면 외부로 검색 영역을 넓힌다.
+
+        ```python
+        text = "I am global!"
+
+        def foo():
+            print(text)
+
+        foo()  ## I am global!
+        ```
+
+    4. 변수의 라이프 사이클
+
+        ```python
+        def foo():
+            x = 1
+
+        foo()
+        print(x) # NameError: name 'x' is not defined
+        ```
+
+        네임스페이스는 함수foo가 호출될 때마다 생성되며 처리가 끝나면 사라져버린다. 즉, 위의 예에서 `print(x)` 타이밍에서는 에러 내용대로 x라는 이름의 변수가 존재하지 않는다.
+
+    5. 함수의 인수와 파라미터
+
+        파이썬에서는 함수에 인수를 전달하는 것이 가능하다.
+
+        ```python
+        def foo(x):
+            print(locals())
+
+        foo(1) # {'x': 1} ## 파라미터 x가 로컬 변수명으로 사용되고 있다.
+        ```
+
+    6. 함수의 중첩
+
+        파이썬에서는 함수 내에 다시 함수를 정의할 수 있다. 즉, 중첩할 수 있다.
+
+        ```python
+        def outer():
+            x = 1
+            def inner():
+                print(x) ### A
+            inner() ### B
+
+        outer() # 1
+        ```
+
+        A에서는 로컬 변수 x를 찾아보지만 없으므로 외부의 네임 스페이스를 찾아서 outer 내에 정의되어 있는 x를 참고한다. B에서는 inner()을 호출하고 있지만, 여기서 중요한 것은 inner이라는 것도 하나의 변수명에 지나지 않고,
+        해결 규칙 내용을 바탕으로 outer 내에 네임 스페이스 내에 정의를 찾아서 호출한다는 점이다.
+
+    7. 함수는 파이썬에서 퍼스트 클래스 오브젝트이다.
+
+        파이썬에서 함수는 객체에 불과하다. 파이썬 내의 모든 객체는 같은 공통 클래스를 상속하여 만들어진다.
+
+        ```python
+        issubclass(int, object) # True
+
+        def foo():
+            pass
+
+        foo.__class__ ## function
+
+        issubclass(foo.__class__, object) # True
+        ```
+
+        함수를 다른 변수와 동일하게 취급한다는 것을 알 수 있다. 즉, 다른 함수의 인수로 전달하거나 함수의 리턴값으로써 사용할 수 있다는 것이다.
+
+        ```python
+        def outer():
+            def inner():
+                print("inside inner")
+            return inner ## A
+
+        foo = outer()
+        foo ## <function inner at 0x...>
+
+        foo() ## inside inner
+        ```
+
+    8. 클로저
+
+        ```python
+        def outer():
+            x = 1
+            def inner():
+                print(x)
+            return inner
+        foo = outer()
+        foo.__closure__ ## <cell at 0x000001B583B238B0: int object at 0x000001B5FEA100F0>
+        ```
+
+        클로저는 글로벌 스코프 이외에 정의된 함수(위 코드에선 inner)가 "정의될 때"의 자신을 포함한 스코프 정보를 기억하고 있다. inner 함수는 outer 함수가 호출 될 때마다 새롭게 정의된다.
+
+        ```python
+        def outer(x):
+            def inner():
+                print(x)
+            return inner
+
+        print1 = outer(1)
+        print2 = outer(2)
+
+        print1() # 1
+        print2() # 2
+        ```
+
+        위의 코드에선 print1이나 print2에 직접 값을 인수로 넣지 않아도 각각의 내부의 inner 함수가 어떤 값을 출력해야 하나를 기억하고 있다. 이것을 이용해서 고정 인수를 얻도록 커스터마이즈한 함수를 생성하는 것도 가능하다.
+
+    9. 데코레이터
+
+        > 데코레이터는 함수를 수정하지 않은 상태에섯 추가 기능을 구현할 때 사용한다.
+
+        ```python
+        def hello():
+            print('hello 함수 시작')
+            print('hello')
+            print('hello 함수 끝')
+
+        def world():
+            print('world 함수 시작')
+            print('world')
+            print('world 함수 끝')
+
+        hello()
+        world()
+
+        # hello 함수 시작
+        # hello
+        # hello 함수 끝
+        # world 함수 시작
+        # world
+        # world 함수 끝
+        ```
+
+        다른 함수에도 이를 적용하려면 만들 때마다 `print`를 넣어야해서 매우 번거롭다. 이 때, 데코레이터를 활용하면 된다.
+
+        ```python
+        def trace(func):                             # 호출할 함수를 매개변수로 받음
+            def wrapper():                           # 호출할 함수를 감싸는 함수
+                print(func.__name__, '함수 시작')    # __name__으로 함수 이름 출력
+                func()                               # 매개변수로 받은 함수를 호출
+                print(func.__name__, '함수 끝')
+            return wrapper                           # wrapper 함수 반환
+
+        def hello():
+            print('hello')
+
+        def world():
+            print('world')
+
+        trace_hello = trace(hello)    # 데코레이터에 호출할 함수를 넣음
+        trace_hello()                 # 반환된 함수를 호출
+        trace_world = trace(world)    # 데코레이터에 호출할 함수를 넣음
+        trace_world()                 # 반환된 함수를 호출`
+
+        # hello 함수 시작
+        # hello
+        # hello 함수 끝
+        # world 함수 시작
+        # world
+        # world 함수 끝
+        ```
+
+        `trace()` 함수는 함수 안에서 함수를 만들고 반환하는 클로저이다. 이제 데코레이터를 사용해보자.
+
+        ```python
+        def trace(func):                             # 호출할 함수를 매개변수로 받음
+            def wrapper():
+                print(func.__name__, '함수 시작')    # __name__으로 함수 이름 출력
+                func()                               # 매개변수로 받은 함수를 호출
+                print(func.__name__, '함수 끝')
+            return wrapper                           # wrapper 함수 반환
+
+        @trace    # @데코레이터
+        def hello():
+            print('hello')
+
+        @trace    # @데코레이터
+        def world():
+            print('world')
+
+        hello()    # 함수를 그대로 호출
+        world()    # 함수를 그대로 호출
+
+        # 결과값은 동일
+        ```
+
+        데코레이터는 함수를 감싸는 형태로 구성되어 있다. 따라서 기존 함수를 수정하지 않으면서 추가 기능을 구현할 때 사용한다.
