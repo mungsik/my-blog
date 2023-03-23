@@ -1,0 +1,28 @@
+---
+title: 3주차 정리
+date: 2023-03-22
+---
+
+export const Highlight = ({children, color}) => (
+    <span
+        style={{
+        backgroundColor: color,
+        borderRadius: '5px',
+        color: '#fff',
+        padding: '0.2rem',
+        }}>
+        {children}
+    </span>
+    );
+
+# 💨 Pandas
+
+### `melt` vs `pivot`
+
+데이터 재구조화, 전처리 과정에서 pivot과 melt는 반대의 동작을 한다.
+
+    - `melt()` 는 dataframe format을 wide 에서 long으로 바꿔주는 함수이다. 인덱스와 열을 녹여 하나 혹은 다수의 컬럼이 idenifier가 되어 dataframe을 specified format으로 재구조화한다.
+
+    - `pivot()` 은 여러 형태로 이루어진 dataframe에 index, columns, values를 각각 지정해주어 melt된 df를 보기 좋은 형태로 재구조화시켜준다. 즉, unmelt의 개념이다.
+
+
